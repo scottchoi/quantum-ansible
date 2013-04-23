@@ -32,4 +32,11 @@ Vagrant::Config.run do |config|
     compute1_config.vm.network :hostonly, "10.0.20.12" # eth2 vm traffic
   end
 
+  config.vm.define :compute2 do |compute2_config|
+    compute2_config.vm.host_name = "compute2"
+    compute2_config.vm.customize ["modifyvm", :id, "--memory", 1024]
+    compute2_config.vm.network :hostonly, "10.0.10.13" # eth1 mgt
+    compute2_config.vm.network :hostonly, "10.0.20.13" # eth2 vm traffic
+  end
+
 end

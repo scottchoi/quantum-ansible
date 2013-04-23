@@ -6,6 +6,7 @@ cd vms
 vagrant up controller
 vagrant up netnode
 vagrant up compute1
+vagrant up compute2
 cd ..
 
 echo
