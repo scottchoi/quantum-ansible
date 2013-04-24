@@ -1,5 +1,17 @@
-export OS_USERNAME=admin
-export OS_TENANT_NAME=demo
-export OS_PASSWORD=secrete
+# source openrc [username] [tenantname] [password]
+
+if [[ -n "$1" ]]; then
+    OS_USERNAME=$1
+fi
+if [[ -n "$2" ]]; then
+    OS_TENANT_NAME=$2
+fi
+if [[ -n "$3" ]]; then
+    OS_PASSWORD=$3
+fi
+
+export OS_USERNAME=${OS_USERNAME:-admin}
+export OS_TENANT_NAME=${OS_TENANT_NAME:-demo}
+export OS_PASSWORD=${OS_PASSWORD:-secrete}
 export OS_AUTH_URL=http://10.0.10.10:5000/v2.0/
 export OS_REGION_NAME=RegionOne
