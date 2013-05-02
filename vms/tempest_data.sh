@@ -47,7 +47,7 @@ quantum security-group-create --tenant-id $TEST_ALT_TENANT test
 
 # Network
 quantum net-create ext-net --router:external true
-quantum subnet-create ext-net 192.168.101.0/24 --enable_dhcp False
+quantum subnet-create --gateway 192.168.101.1 ext-net 192.168.101.0/24 --enable_dhcp False
 
 quantum router-create --tenant-id $TEST_TENANT router1
 quantum router-gateway-set router1 ext-net
