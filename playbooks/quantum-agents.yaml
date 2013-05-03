@@ -64,6 +64,13 @@
           owner=quantum group=quantum mode=0600 backup=yes
     notify: restart metadata agent
 
+  # https://lists.launchpad.net/openstack/msg22130.html
+  - name: ensure quantum_sudoers includes '/sbin/ip' command
+    copy: >
+          src=files/etc/sudoers.d/quantum_sudoers
+          dest=/etc/sudoers.d/quantum_sudoers
+          owner=root group=root mode=0440
+
   handlers:
     - name: restart l3 agent
       action: service name=quantum-l3-agent state=restarted
