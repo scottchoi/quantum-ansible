@@ -41,20 +41,25 @@ nova flavor-create micro6 6 60 0 1
 nova flavor-create micro7 7 70 0 1
 
 # Security Groups
-quantum security-group-create --tenant-id $TEST_ADMIN_TENANT test
-quantum security-group-create --tenant-id $TEST_TENANT test
-quantum security-group-create --tenant-id $TEST_ALT_TENANT test
+quantum security-group-create --tenant-id $TEST_ADMIN_TENANT sg_test_admin
+quantum security-group-create --tenant-id $TEST_TENANT sg_test
+quantum security-group-create --tenant-id $TEST_ALT_TENANT sg_test_alt
+
+quantum security-group-rule-create --tenant-id $TEST_TENANT --protocol icmp --direction ingress --remote-ip-prefix 0.0.0.0/0 sg_test
+quantum security-group-rule-create --tenant-id $TEST_TENANT --protocol tcp --port-range-min 22 --port-range-max 22 --direction ingress --remote-ip-prefix 0.0.0.0/0 sg_test 
 
 # Network
 quantum net-create ext-net --router:external true
-quantum subnet-create --gateway 192.168.101.1 ext-net 192.168.101.0/24 --enable_dhcp False
-
-quantum router-create --tenant-id $TEST_TENANT router1
-quantum router-gateway-set router1 ext-net
+quantum subnet-create ext-net 192.168.101.0/24 --enable_dhcp False
 
 quantum net-create --tenant-id $TEST_TENANT net1 
 quantum subnet-create --tenant-id $TEST_TENANT net1 10.0.33.0/24 --name=sub1
+
+quantum router-create --tenant-id $TEST_TENANT router1
+quantum router-gateway-set router1 ext-net
 quantum router-interface-add router1 sub1
 
 nova image-list
 quantum net-external-list
+quantum router-list
+quantum port-list -c fixed_ips -c device_owner
