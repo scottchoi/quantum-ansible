@@ -35,6 +35,7 @@
     - netnode
     - compute_nodes
   sudo: True
+  serial: 1 # to avoid tunnel ip duplication
   tasks:
   - name: add default ovs bridge br-int for agent
     action: command /usr/bin/ovs-vsctl -- --may-exist add-br br-int
