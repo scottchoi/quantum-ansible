@@ -7,7 +7,7 @@
   - name: ensure nova-compute packages are installed
     apt: pkg=$item update-cache=yes
     with_items:
-      - nova-compute-qemu
+      - nova-compute-kvm
 
   - name: ensure nova.conf file is present
     template: >
