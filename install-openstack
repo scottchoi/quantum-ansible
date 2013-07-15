@@ -4,7 +4,7 @@ set -e
 
 git submodule update --init
 
-./start-nodes
+#./start-nodes
 
 ansible-playbook -v openstack.yaml
 

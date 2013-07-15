@@ -1,7 +1,7 @@
-controller ansible_ssh_host=10.0.10.10
+controller 
 
-netnode    ansible_ssh_host=10.0.10.11 br_ex_ip=192.168.101.101
+netnode    br_ex_ip=192.168.101.101
 
 [compute_nodes]
-compute1 ansible_ssh_host=10.0.10.12
-compute2 ansible_ssh_host=10.0.10.13
+compute1 
+compute2 
