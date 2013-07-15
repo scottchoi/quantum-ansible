@@ -3,12 +3,12 @@
 set -x
 set -e
 
-. /vagrant/openrc
+. openrc
 
 nova flavor-create micro 6 50 0 1 || true
 
-chmod 0600 /vagrant/test-key
-nova keypair-add --pub-key /vagrant/test-key.pub test-key
+chmod 0600 test-key
+nova keypair-add --pub-key test-key.pub test-key
 
 quantum net-create net1
 quantum subnet-create net1 10.0.33.0/24 --name=sub1
@@ -43,4 +43,4 @@ quantum floatingip-associate $FLOAT_ID $PORT_ID
 quantum floatingip-show $FLOAT_ID
 
 eval `quantum floatingip-show -f shell --variable floating_ip_address $FLOAT_ID`
-echo "Give VM a minute to boot before trying ssh -i vms/test-key cirros@${floating_ip_address} from main host"
+echo "Give VM a minute to boot before trying ssh -i test-key cirros@${floating_ip_address} from main host"
