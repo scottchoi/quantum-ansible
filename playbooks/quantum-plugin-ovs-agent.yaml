@@ -14,6 +14,7 @@
       - openvswitch-datapath-source
       - openvswitch-switch
       - kernel-package
+      - iptables
 
   - name: ensure OVS kernel module is loaded
     action: command /sbin/modprobe openvswitch
