@@ -1,6 +1,6 @@
 #!/bin/sh
 
-
+ip addr flush dev {{ ext_net_nic }} 
 ip link set {{ ext_net_nic }} up
-#ip address add {{ br_ex_ip }} dev br-ex
+#ip address add {{ br_ex_ip }}/24 dev br-ex
 ip link set dev br-ex up
