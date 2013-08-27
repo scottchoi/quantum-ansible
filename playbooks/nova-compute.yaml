@@ -6,8 +6,17 @@
   tasks:
   - name: ensure nova-compute packages are installed
     apt: pkg=$item update-cache=yes
+    register: result
     with_items:
       - nova-compute-kvm
+
+  - name: destroy default network
+    shell: virsh net-destroy default
+    when: result
+
+  - name: undefine default network
+    shell: virsh net-undefine default
+    when: result
 
   - name: ensure nova.conf file is present
     template: >
@@ -17,7 +26,7 @@
           backup=yes
     notify:
       - restart nova-compute
-      
+
   - name: ensure nova-compute.conf present
     copy: >
         src=files/etc/nova/nova-compute.conf
