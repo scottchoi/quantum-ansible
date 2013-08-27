@@ -117,15 +117,15 @@
     # http://docs.openstack.org/folsom/openstack-compute/install/apt/content/setting-up-tenants-users-and-roles-manually.html
     # Same as keystone tenant-craete
   - name: create default tenant
-    keystone_user: token=$admin_token tenant=demo tenant_description="Default Tenant"
+    keystone_user: token=$admin_token tenant=admin tenant_description="Default Tenant"
 
     # Same as keystone user-create
   - name: create admin user
-    keystone_user: token=$admin_token user=admin tenant=demo password=secrete
+    keystone_user: token=$admin_token user=admin tenant=admin password=secrete
 
     # Same as keystone role-create and keystone user-role-add
   - name: create admin role and associate it with admin user
-    keystone_user: token=$admin_token role=admin user=admin tenant=demo
+    keystone_user: token=$admin_token role=admin user=admin tenant=admin
 
   - name: create service tenant
     keystone_user: token=$admin_token tenant=service tenant_description="Service Tenant"
