@@ -12,11 +12,13 @@
 
   - name: destroy default network
     shell: virsh net-destroy default
-    when: result
+    ignore_errors: True
+    when_boolean: '${result.changed}'
 
   - name: undefine default network
     shell: virsh net-undefine default
-    when: result
+    ignore_errors: True
+    when_boolean: '${result.changed}'
 
   - name: ensure nova.conf file is present
     template: >
