@@ -1,0 +1,103 @@
+---
+- name: Cinder block volume service with nexenta driver patched in havana series
+  hosts: controller
+  sudo: True
+  tasks:
+
+  - name: ensure packages are uninstalled
+    apt: pkg=$item update_cache=yes state=absent purge=yes
+    with_items:
+      - cinder-common
+      - cinder-api
+      - cinder-scheduler
+      - cinder-volume
+      - python-cinder
+      #- python-cinderclient
+      #- open-iscsi  # is this needed on controller?
+      - tgt
+
+  - name: install git, pip packages
+    apt: pkg=$item update_cache=yes
+    with_items:
+      - git
+      - python-pip
+      - qemu-utils
+
+  - name: checkout cinder master branch for havana series
+    git: repo=https://github.com/openstack/cinder.git dest=/opt/stack/cinder update=no version=fb20577
+    register: result
+
+  - name: copy cider nexenta patch
+    copy: src=cinder.diff dest=/opt/stack/cinder
+
+  - name: apply cinder patch
+    shell: patch -p1 < cinder.diff chdir=/opt/stack/cinder
+    when_boolean: '${result.changed}'
+
+  - name: install python packages
+    pip: requirements=/opt/stack/cinder/requirements.txt
+
+  - name: setup in develop mode
+    shell: python setup.py develop chdir=/opt/stack/cinder
+    when_boolean: '${result.changed}'
+
+  - name: link cinder bin files under /usr/local/bin
+    file: src=/usr/local/bin/cinder-rootwrap dest=/usr/bin/cinder-rootwrap state=link
+
+  - name: link cinder bin files under /usr/local/bin
+    file: src=/usr/local/bin/cinder-api dest=/usr/bin/cinder-api state=link
+
+  - name: link cinder bin files under /usr/local/bin
+    file: src=/usr/local/bin/cinder-scheduler dest=/usr/bin/cinder-scheduler state=link
+
+  - name: link cinder bin files under /usr/local/bin
+    file: src=/usr/local/bin/cinder-volume dest=/usr/bin/cinder-volume state=link
+
+  - name: copy conf files under /opt/stack/cinder/etc/cinder
+    shell: cp -f /opt/stack/cinder/etc/cinder/policy.json /etc/cinder
+    when_boolean: '${result.changed}'
+
+  - name: copy conf files under /opt/stack/cinder/etc/cinder
+    shell: cp -f /opt/stack/cinder/etc/cinder/rootwrap.conf /etc/cinder
+    when_boolean: '${result.changed}'
+
+  - name: copy conf files under /opt/stack/cinder/etc/cinder
+    shell: cp -f /opt/stack/cinder/etc/cinder/rootwrap.d/*.* /etc/cinder/rootwrap.d/
+    when_boolean: '${result.changed}'
+
+  - name: ensure cinder database is present
+    mysql_db: name=cinder
+
+  - name: sync cinder db
+    command: cinder-manage db sync
+    when_boolean: '${result.changed}'
+
+  - name: ensure cinder database user is present
+    mysql_user: name=cinder host=$item password=$cinder_db_password priv=cinder.*:ALL
+    with_items:
+      - localhost
+      - $controller_ip
+
+  - name: ensure api-paste.ini is configured
+    template: >
+        src=playbooks/templates/etc/cinder/api-paste.ini.j2
+        dest=/etc/cinder/api-paste.ini
+        owner=cinder group=cinder mode=0644 backup=yes
+    notify:
+      - restart cinder services
+
+  - name: ensure cinder.conf is configured
+    template: >
+        src=playbooks/templates/etc/cinder/cinder.nexenta.conf.j2
+        dest=/etc/cinder/cinder.conf
+        owner=cinder group=cinder mode=0644 backup=yes
+    notify:
+      - restart cinder services
+
+  handlers:
+  - name: restart cinder services
+    service: name=$item state=restarted
+    with_items:
+      - cinder-volume
+      - cinder-api
+      - cinder-scheduler

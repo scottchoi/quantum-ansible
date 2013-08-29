@@ -1,0 +1,38 @@
+[DEFAULT]
+my_ip = {{ controller_ip }}
+iscsi_ip_address = {{ controller_ip }}
+
+rootwrap_config = /etc/cinder/rootwrap.conf
+sql_connection = mysql://cinder:{{cinder_db_password }}@{{ controller_ip }}/cinder
+api_paste_confg = /etc/cinder/api-paste.ini
+
+iscsi_helper = tgtadm
+volume_name_template = volume-%s
+volume_group = cinder-volumes
+debug = {{ log_debug }}
+verbose = {{ log_verbose }}
+auth_strategy = keystone
+
+state_path = /var/lib/cinder
+lock_path = /var/lock/cinder
+volumes_dir = /var/lib/cinder/volumes
+
+volume_driver=cinder.volume.drivers.nexenta.volume.NexentaDriver
+volume_backend_name=NexentaStor
+
+nexenta_host=192.168.122.100
+nexenta_rest_port=2000
+nexenta_rest_protocol=auto
+nexenta_user=admin
+nexenta_password=nexr4101
+#iscsi_ip_address=192.168.122.100
+san_login=admin
+san_password=nexr4101
+san_ip=192.168.122.100
+nexenta_iscsi_target_portal_port=3260
+nexenta_volume=mypool1
+nexenta_target_prefix=iqn.2013-08.com.kt:01:cinder-
+nexenta_target_group_prefix=mypool1-tg1/
+
+#nexenta_blocksize=8KB
+#nexenta_sparse=false
