@@ -1,10 +1,17 @@
 [DEFAULT]
-my_ip = {{ controller_ip }}
-iscsi_ip_address = {{ controller_ip }}
+#my_ip = {{ controller_ip }}
+{% set my_ip = ansible_eth0["ipv4"]["address"]  %}
+my_ip={{ my_ip }}
+#iscsi_ip_address = {{ controller_ip }}
+{% set iscsi_ip_address = ansible_eth0["ipv4"]["address"]  %}
+iscsi_ip_address = {{ iscsi_ip_address }}
 
 rootwrap_config = /etc/cinder/rootwrap.conf
 sql_connection = mysql://cinder:{{cinder_db_password }}@{{ controller_ip }}/cinder
 api_paste_confg = /etc/cinder/api-paste.ini
+
+rabbit_host = {{ controller_ip }}
+glance_host = {{ controller_ip }}
 
 iscsi_helper = tgtadm
 volume_name_template = volume-%s
@@ -16,3 +23,7 @@ auth_strategy = keystone
 state_path = /var/lib/cinder
 lock_path = /var/lock/cinder
 volumes_dir = /var/lib/cinder/volumes
+
+{% if inventory_hostname in groups["volume_nodes"] %} 
+storage_availability_zone = {{ AZ }}
+{% endif %}

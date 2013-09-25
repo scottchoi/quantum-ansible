@@ -24,5 +24,7 @@ swift_identity_password: swiftpass
 quantum_identity_password: quantum
 cinder_identity_password: cinder
 
+AZ: az99
+
 
 

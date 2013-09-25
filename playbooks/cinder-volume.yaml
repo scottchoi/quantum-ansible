@@ -1,0 +1,50 @@
+---
+- name: Cinder block volume service
+  hosts: volume_nodes
+  sudo: True
+  tasks:
+
+  - name: ensure packages are installed
+    apt: pkg=$item update_cache=yes
+    with_items:
+      - python-mysqldb
+      - cinder-common
+      - cinder-volume
+      - open-iscsi
+      - tgt
+      - qemu-utils # boot from volume
+
+  - name: ensure cinder.conf is configured
+    template: >
+        src=templates/etc/cinder/cinder.conf.j2
+        dest=/etc/cinder/cinder.conf
+        owner=cinder group=cinder mode=0644 backup=yes
+    notify:
+      - restart cinder services
+
+  - name: ensure script to start loop dev for cinder-volumes in place
+    copy: >
+        src=files/usr/local/bin/cinder-start-loop
+        dest=/usr/local/bin/cinder-start-loop
+        owner=cinder group=cinder mode=0755
+
+  - name: ensure upstart job to start loop device at boot is present
+    copy: >
+        src=files/etc/init/cinder-start-loop.conf
+        dest=/etc/init/cinder-start-loop.conf
+        owner=root group=root mode=0644
+    notify:
+      - start loop device
+      - restart tgt
+
+  handlers:
+  - name: start loop device
+    service: name=cinder-start-loop state=started
+
+  - name: restart tgt
+    service: name=tgt state=restarted
+
+  - name: restart cinder services
+    service: name=$item state=restarted
+    with_items:
+      - cinder-volume

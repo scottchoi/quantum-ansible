@@ -56,3 +56,24 @@
       ip: 10.0.10.13
     - network: int
       ip: 10.0.20.13
+
+  - name: volume1 
+    vcpus: 1
+    ram: 1024 
+    template: precise64.qcow2
+    netdevs:
+    - network: mgmt
+      ip: 10.0.10.14
+    - network: int
+      ip: 10.0.20.14
+
+  - name: volume2 
+    vcpus: 1
+    kvm_nested: True
+    ram: 1024 
+    template: precise64.qcow2
+    netdevs:
+    - network: mgmt
+      ip: 10.0.10.15
+    - network: int
+      ip: 10.0.20.15

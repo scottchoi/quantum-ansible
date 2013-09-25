@@ -3,5 +3,9 @@ controller
 netnode    br_ex_ip=192.168.101.101
 
 [compute_nodes]
-compute1 
-compute2 
+compute1 AZ=az1
+compute2 AZ=az2
+
+[volume_nodes]
+volume1  AZ=cheonan.dmz.prod
+volume2  AZ=cheonan.ktis.prod
