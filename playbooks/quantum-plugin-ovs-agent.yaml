@@ -23,7 +23,8 @@
 
   - name: build openvswitch-datapath kernel module - this may take a while
     action: command /usr/bin/module-assistant -i auto-install openvswitch-datapath
-    only_if: "'${modprobe_result.stderr}'.find('FATAL: Module openvswitch not found.') == 0"
+    #only_if: "'${modprobe_result.stderr}'.find('FATAL: Module openvswitch not found.') == 0"
+    when: modprobe_result.rc != 0
     notify: restart openvswitch services
 
   handlers:
