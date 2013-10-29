@@ -20,6 +20,12 @@
   - name: update the cache
     apt: update_cache=yes
 
+  - name: ensure sysstat packages are installed
+    apt: pkg=$item
+    with_items:
+      - sysstat
+      - htop
+      - iotop
 
 # - name: update ntp.conf file for server 
 #   hosts: controller
