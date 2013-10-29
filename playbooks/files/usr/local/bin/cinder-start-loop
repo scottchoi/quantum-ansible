@@ -9,7 +9,7 @@ date
 
 BACKING_FILE=/var/lib/cinder/loop-backing-file
 LOOP_DEV=/dev/loop0
-SIZE=20G
+SIZE=15G
 
 [ $EUID -eq 0 ] || (echo "$0 must be run by root" && exit 1)
 
