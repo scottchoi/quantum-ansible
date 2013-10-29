@@ -15,7 +15,7 @@ nova keypair-add --pub-key test-key.pub test-key
 quantum net-create net1
 quantum subnet-create net1 10.0.33.0/24 --name=sub1 --dns-nameserver 8.8.8.8
 
-quantum net-create ext-net --provider:network_type local --router:external true --shared
+quantum net-create ext-net --provider:network_type local --router:external true 
 quantum subnet-create ext-net 192.168.101.0/24 --enable_dhcp False
 
 quantum router-create router1

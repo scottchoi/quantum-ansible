@@ -49,7 +49,7 @@ quantum security-group-rule-create --tenant-id $TEST_TENANT --protocol icmp --di
 quantum security-group-rule-create --tenant-id $TEST_TENANT --protocol tcp --port-range-min 22 --port-range-max 22 --direction ingress --remote-ip-prefix 0.0.0.0/0 sg_test 
 
 # Network
-quantum net-create ext-net --router:external true --shared
+quantum net-create ext-net --router:external true
 quantum subnet-create ext-net 192.168.101.0/24 --enable_dhcp False
 
 quantum net-create --tenant-id $TEST_TENANT net1 
