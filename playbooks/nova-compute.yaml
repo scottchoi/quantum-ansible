@@ -38,6 +38,31 @@
     notify:
       - restart nova-compute
 
+  - name: ensure -l option to libvirt-bin.conf
+    lineinfile: >
+        dest=/etc/init/libvirt-bin.conf
+        regexp='^env libvirtd_opts="-d"'
+        line='env libvirtd_opts="-d -l"'
+    notify:
+      - restart libvirt
+
+  - name: ensure -l option to libvirt-bin
+    lineinfile: >
+        dest=/etc/default/libvirt-bin
+        regexp='^libvirtd_opts="-d"'
+        line='libvirtd_opts="-d -l"'
+    notify:
+      - restart libvirt
+
+  - name: ensure /etc/libvirt/libvirtd.conf is correct
+    copy: >
+        src=files/etc/libvirt/libvirtd.conf
+        dest=/etc/libvirt/libvirtd.conf
+        owner=root group=root mode=0644
+        backup=yes
+    notify:
+      - restart libvirt
+
   - name: ensure /etc/libvirt/qemu.conf is correct
     copy: >
         src=files/etc/libvirt/qemu.conf
