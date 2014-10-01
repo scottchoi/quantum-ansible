@@ -5,3 +5,4 @@ netnode    br_ex_ip=192.168.101.101
 [compute_nodes]
 compute1 
 compute2 
+compute3

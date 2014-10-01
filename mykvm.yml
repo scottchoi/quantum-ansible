@@ -56,3 +56,14 @@
       ip: 10.0.10.13
     - network: int
       ip: 10.0.20.13
+
+  - name: compute3
+    vcpus: 2
+    kvm_nested: True
+    ram: 2048 
+    template: precise64.qcow2
+    netdevs:
+    - network: mgmt
+      ip: 10.0.10.14
+    - network: int
+      ip: 10.0.20.14
